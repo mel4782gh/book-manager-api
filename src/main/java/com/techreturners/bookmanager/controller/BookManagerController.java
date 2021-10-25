@@ -15,6 +15,7 @@ public class BookManagerController {
 
     BookManagerService bookManagerService;
 
+    //takes dependency
     public BookManagerController(BookManagerService bookManagerService) {
         this.bookManagerService = bookManagerService;
     }
@@ -27,6 +28,7 @@ public class BookManagerController {
 
     @GetMapping({"/{bookId}"})
     public ResponseEntity<Book> getBookById(@PathVariable Long bookId) {
+        //responseentity is http response
         return new ResponseEntity<>(bookManagerService.getBookById(bookId), HttpStatus.OK);
     }
 
@@ -42,6 +44,13 @@ public class BookManagerController {
     @PutMapping({"/{bookId}"})
     public ResponseEntity<Book> updateBookById(@PathVariable("bookId") Long bookId, @RequestBody Book book) {
         bookManagerService.updateBookById(bookId, book);
+        return new ResponseEntity<>(bookManagerService.getBookById(bookId), HttpStatus.OK);
+    }
+
+    //User Story 5 - Delete Book By Id Solution
+    @DeleteMapping({"/{bookId}"})
+    public ResponseEntity<Book> deleteBookById(@PathVariable("bookId") Long bookId, @RequestBody Book book) {
+        bookManagerService.deleteBookById(bookId, book);
         return new ResponseEntity<>(bookManagerService.getBookById(bookId), HttpStatus.OK);
     }
 

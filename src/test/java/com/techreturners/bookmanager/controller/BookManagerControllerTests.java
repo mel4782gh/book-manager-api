@@ -22,40 +22,51 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@AutoConfigureMockMvc //use a special mockmvc server, gives a slimmed down version of your app
+@SpringBootTest //tells test class to boot up application we have built
 public class BookManagerControllerTests {
 
-    @Mock
+    @Mock //label as test double
     private BookManagerServiceImpl mockBookManagerServiceImpl;
 
-    @InjectMocks
+    @InjectMocks //specifies that this will be injected in constructor
     private BookManagerController bookManagerController;
 
-    @Autowired
+    @Autowired // spring - enables objects to be injected at runtime - we want this mockmvccontroller at runtime - slim down your tests so they start up faster, so do not start full server
     private MockMvc mockMvcController;
 
     private ObjectMapper mapper;
 
     @BeforeEach
     public void setup(){
+        //builder configure my controller as mockmvc
+        //register my controller against mockmvc
         mockMvcController = MockMvcBuilders.standaloneSetup(bookManagerController).build();
+        //to come later
         mapper = new ObjectMapper();
     }
 
     @Test
     public void testGetAllBooksReturnsBooks() throws Exception {
-
+        //controller's job test display functionality and status code correct. So make bookmanagerservice into a test double
+        //test data
         List<Book> books = new ArrayList<>();
         books.add(new Book(1L, "Book One", "This is the description for Book One", "Person One", Genre.Education));
         books.add(new Book(2L, "Book Two", "This is the description for Book Two", "Person Two", Genre.Education));
         books.add(new Book(3L, "Book Three", "This is the description for Book Three", "Person Three", Genre.Education));
-
+        //stub to return test books whenever getAllBooks is called
+        //when - when you do this, this is the result
         when(mockBookManagerServiceImpl.getAllBooks()).thenReturn(books);
-
+        //Assert what are we checking for? provide it with the request
         this.mockMvcController.perform(
+                //do a get request - user googling/postman to GET book
             MockMvcRequestBuilders.get("/api/v1/book/"))
+                //Assert - what are we checking for
+                //check that I get status code 200
             .andExpect(MockMvcResultMatchers.status().isOk())
+                //check our result from GET all books
+                //check the id and the title for each book matches our test data
+                //0 is first element of json
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Book One"))
             .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
@@ -107,6 +118,22 @@ public class BookManagerControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         verify(mockBookManagerServiceImpl, times(1)).updateBookById(book.getId(), book);
+    }
+
+    //User Story 5 - Delete Book By Id Solution
+    @Test
+    public void testDeleteMappingDeleteABook() throws Exception {
+
+        Book book = new Book(4L, "Fabulous Four", "This is the description for the Fabulous Four", "Person Four", Genre.Fantasy);
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/book/" + book.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(book)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        //Kim is this the only way to test that bookmanagerservice deleted a book by checking that deleteBookbyId was called
+
+        verify(mockBookManagerServiceImpl, times(1)).deleteBookById(book.getId(), book);
     }
 
 }

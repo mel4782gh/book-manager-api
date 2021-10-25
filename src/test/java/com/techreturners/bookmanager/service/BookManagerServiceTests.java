@@ -19,25 +19,32 @@ import static org.mockito.Mockito.*;
 @DataJpaTest
 public class BookManagerServiceTests {
 
-    @Mock
+    @Mock //using test doubles lets you do dependency injection, do not introduce real dependency
+    //we need to isolate the bookmanagerservice so test that only
     private BookManagerRepository mockBookManagerRepository;
-
+    //need to give it the test double
     @InjectMocks
     private BookManagerServiceImpl bookManagerServiceImpl;
 
     @Test
     public void testGetAllBooksReturnsListOfBooks() {
 
+        //Arrange
+        //set up some test data as a list
         List<Book> books = new ArrayList<>();
         books.add(new Book(1L, "Book One", "This is the description for Book One", "Person One", Genre.Education));
         books.add(new Book(2L, "Book Two", "This is the description for Book Two", "Person Two", Genre.Education));
         books.add(new Book(3L, "Book Three", "This is the description for Book Three", "Person Three", Genre.Education));
 
+        //this is a stub - stubbing the return from calling findAll() return books on the mockBookManagerRepository
+        //when - is part of Mockqito
         when(mockBookManagerRepository.findAll()).thenReturn(books);
 
+        //may have to wait for this to run and use await
         List<Book> actualResult = bookManagerServiceImpl.getAllBooks();
-
+        //books have been added - check the size
         assertThat(actualResult).hasSize(3);
+        //check the actual result vs. expected result
         assertThat(actualResult).isEqualTo(books);
     }
 
