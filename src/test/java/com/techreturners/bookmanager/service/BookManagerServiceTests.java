@@ -88,4 +88,20 @@ public class BookManagerServiceTests {
         verify(mockBookManagerRepository, times(1)).save(book);
     }
 
+    //User Story 5 - Delete Book By Id Solution
+    @Test
+    public void testDeleteBookById() {
+        //Arrange
+        //Create a new bookId and book object
+        Long bookId = 5L;
+        var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
+        //when findById is called on the mockBookManagerRepository then return book as we are testing the service without dependency on the database
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.of(book));
+
+        //act call the deleteBookById method in the service
+        bookManagerServiceImpl.deleteBookById(bookId, book);
+        //assert - check that mockBookManagerRepository called delete book once
+        verify(mockBookManagerRepository, times(1)).deleteById(bookId);
+    }
+
 }
