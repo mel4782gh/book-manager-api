@@ -40,4 +40,18 @@ public class BookManagerRepositoryTests {
 
     }
 
+    //add a test to delete a book, save a book and then delete and check that find returns null
+    //This test fails to delete the book by id, not sure if this is a local database connection issue
+    @Test
+    public void testDeleteBookByIdReturnsNull() {
+        //Arrange - save a book to the repository
+        Book book = new Book(2L, "Book Two", "This is the description for Book Two", "Person Two", Genre.Fantasy);
+        bookManagerRepository.save(book);
+        //Act - delete the book from the repository - test fails here debug console - no book class entity with id 2 exists
+        bookManagerRepository.deleteById(book.getId());
+        //Check that book does not exist in the repository
+        var bookById = bookManagerRepository.findById(book.getId());
+        assertThat(bookById).isNull();
+    }
+
 }
