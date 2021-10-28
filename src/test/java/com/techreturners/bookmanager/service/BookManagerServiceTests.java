@@ -100,7 +100,8 @@ public class BookManagerServiceTests {
 
         //act call the deleteBookById method in the service
         bookManagerServiceImpl.deleteBookById(bookId, book);
-        //assert - check that mockBookManagerRepository called delete book once
+        //assert - check that mockBookManagerRepository called deleteById once
+        // Service test uses mock object for the repository in order to isolate dependencies.
         verify(mockBookManagerRepository, times(1)).deleteById(bookId);
     }
 

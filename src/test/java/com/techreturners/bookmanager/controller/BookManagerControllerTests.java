@@ -132,8 +132,9 @@ public class BookManagerControllerTests {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(book)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        //Kim is this the only way to test that bookmanagerservice deleted a book by checking that deleteBookbyId was called
 
+        //Test that bookmanagerservice deleted a book by checking that deleteBookbyId was called.
+        // Controller test uses mock object for the service in order to isolate dependencies.
         verify(mockBookManagerServiceImpl, times(1)).deleteBookById(book.getId(), book);
     }
 

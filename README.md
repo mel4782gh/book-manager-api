@@ -34,6 +34,7 @@ Here are some tasks for you to work on:
 
 `User Story: As a user, I want to use the Book Manager API to delete a book using its ID`
 
+User story implemented with BookManagerControllerTests and BookManagerServiceTests which use mock objects to isolate dependencies.
 
 📘 Extension Task: Oh no! 😭 We've only covered the happy paths in the solution, can you figure out a way
 to add in exception handling to the project? 
