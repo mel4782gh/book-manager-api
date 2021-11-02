@@ -15,10 +15,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class BookmanagerApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(BookmanagerApplication.class, args);
-
-
 	}
 	/* You are using the Builder pattern here to construct the Docket
             instance.
